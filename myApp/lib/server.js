@@ -13,13 +13,15 @@ const fs = require ('fs');
 const handlers = require('./handlers');
 const helpers = require('./helpers');
 const path = require('path');
+var util = require('util');
+var debug = util.debuglog('server');
 
 // Instantiate the server module object
 var server = {};
 
 // @TODO GWET RID OF THIS
 //helpers.sendTwilioSMS('4158375309','Hello!',function(err){
-//    console.log('this was the error',err);
+//    server('this was the error',err);
 //})
 
 // Instantiate the HTTP server
@@ -92,12 +94,15 @@ server.unifiedServer = function(req, res){
             res.writeHead(statusCode);
             res.end(payloadString);
 
-                    // Log the request path
-        console.log("Request received on path: "+trimmedPath+" whir this method: "+method+" with this query string parameters ",queryStringObject);
-        console.log("Request received with these headers ", headers);
-        console.log("Request received with this payloads ", buffer);
-        console.log("Returning this response: ", statusCode, payloadString)
+            // If the response if 200, print green otherwise print red
+            color : string ='';
+            if(statusCode == 200){
+                color = '\x1b[32m%s\x1b[0m'
+            } else {
+                color = '\x1b[31m%s\x1b[0m'
+            }
 
+            debug(color,method.toUpperCase()+' /'+trimmedPath+' '+statusCode);
         });
     });
 };
@@ -114,12 +119,12 @@ server.router = {
 server.init = function(){
     // Start the server
     server.httpServer.listen(config.httpPort,function(){
-        console.log("the server is listening on port "+config.httpPort);
+        console.log('\x1b[36m%s\x1b[0m',"the server is listening on port "+config.httpPort);
     });
     
     // Start the HTTPS server
     server.httpsServer.listen(config.httpsPort,function(){
-        console.log("the server is listening on port "+config.httpsPort);
+        console.log('\x1b[35m%s\x1b[0m',"the server is listening on port "+config.httpsPort);
     });
 
 }
