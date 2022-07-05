@@ -18,7 +18,13 @@ environments.staging = {
         'accountSid' :'ACa722b54e30f315c671d00cc9ed403f1b',
         'authToken' : '9ab1aea9620e14ca8a0f173610a3e5bb',
         'fromPhone' : '+16013916737'
-    }
+    },
+    'templateGlobals': {
+        'appName' : 'UptimeChecker',
+        'companyName' : 'NotARealCompany, Inc',
+        'yearCreated' : '2022',
+        'baseUrl' : 'http://localhost:3000/'
+    } 
 };
 
 // Production environment
@@ -32,7 +38,13 @@ environments.production = {
         'accountSid' :'',
         'authToken' : '',
         'fromPhone' : ''
-    }
+    },
+    'templateGlobals': {
+        'appName' : 'UptimeChecker',
+        'companyName' : 'NotARealCompany, Inc',
+        'yearCreated' : '2022',
+        'baseUrl' : 'http://localhost:5000/'
+    } 
 };
 
 // Determine which environment was passed as a command-line argument

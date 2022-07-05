@@ -8,6 +8,9 @@ var crypto = require('crypto');
 var config  = require('./config');
 var https = require('https');
 var querystring = require('querystring');
+var path = require('path');
+var fs = require('fs');
+
 // Containers for helpers
 var helpers = {};
 
@@ -108,5 +111,72 @@ helpers.sendTwilioSMS = function(phone,msg,callback){
         callback('Given parameters were misssing or invalid')
     }
 };
+
+// Get the string content of a template
+helpers.getTemplate = function(templateName,data,callback){
+    templateName = typeof(templateName) == 'string' && templateName.length > 0 ? templateName : false;
+    data = typeof(data) == 'object' && data !== null ? data : {};
+    if(templateName){
+        var templatesDir = path.join(__dirname,'/../templates/');
+        fs.readFile(templatesDir+templateName+'.html','utf-8',function(err,str){
+            if (!err && str.length > 0){
+                // Do interpolation on the string
+                var finalString = helpers.interpolate(str,data);
+                callback(false,finalString);
+            } else {
+                callback('No template could be found');
+            }
+        });
+    } else {
+        callback('A valid template name was not specified');
+    }
+};
+
+// Add the universal header and footer to the string, and pass provided data object to the header and footer for interpolation
+helpers.addUnversalTemplates = function(str,data,callback){
+    str = typeof(str) == 'string' && str.length > 0 ? str : '';
+    data = typeof(data) == 'object' && data !== null ? data : {};
+    // Get the header
+    helpers.getTemplate('_header',data,function(err,headerString){
+        if(!err && headerString){
+            // Get the footer
+            helpers.getTemplate('_footer',data,function(err,footerString){
+                if(!err && footerString){
+                    // Add them all together
+                    var fullString = headerString+str+footerString;
+                    callback(false,fullString);
+                } else {
+                    callback('Could not find the footer template');
+                }
+            });
+        } else {
+            callback('Could not find the header template');
+        }
+    });
+}
+
+// Taken a given string and a data object and find/replace all the keys within it
+helpers.interpolate = function(str,data){
+    str = typeof(str) == 'string' && str.length > 0 ? str : '';
+    data = typeof(data) == 'object' && data !== null ? data : {};
+
+    // Add the template globals to the data object, depending their key name with "global"
+    for(var keyName in config.templateGlobals) {
+        if(config.templateGlobals.hasOwnProperty(keyName)){
+            data['global.'+keyName] = config.templateGlobals[keyName];
+        }
+    }
+
+    // For each key in the data object, insert its value into the string at the corresponding placeholder
+    for (var key in data){
+        if (data.hasOwnProperty(key) && typeof(data[key]) == 'string'){
+            var replace = data[key];
+            var find = '{'+key+'}';
+            str = str.replace(find,replace);
+        }
+    }
+    return str;
+};
+
 // Export the module
 module.exports = helpers;

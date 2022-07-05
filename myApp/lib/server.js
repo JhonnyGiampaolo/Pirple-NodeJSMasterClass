@@ -79,18 +79,33 @@ server.unifiedServer = function(req, res){
         };
 
         // Route the request to the handler specified in the router
-        choosenHandler(data, function(statusCode,payload){
+        choosenHandler(data, function(statusCode,payload,contentType){
+            // Determine the type of response (fallback to JSON)
+            contentType = typeof(contentType) == 'string' ? contentType : 'json';
+
             // Use the status code called back by the handler, or default to 200
             statusCode = typeof(statusCode) == 'number' ? statusCode : 200;
 
-            // Use the payload called back by the handler, or default to an empty object
-            payload = typeof(payload) == 'object' ? payload : {};
+            // Return the response parts that are content-specific
+            var payloadString = '';
+            if(contentType == 'json'){
+                res.setHeader('Content_Type','application/json')
 
-            // Convert the payload ti a string
-            var payloadString = JSON.stringify(payload);
+                // Use the payload called back by the handler, or default to an empty object
+                payload = typeof(payload) == 'object' ? payload : {};
 
-            //Return the response
-            res.setHeader('Content_Type','application/json')
+                // Convert the payload ti a string
+                var payloadString = JSON.stringify(payload);
+
+            } if (contentType == 'html') {
+                res.setHeader('Content_Type','text/html')
+
+                // Use the payload called back by the handler, or default to an empty string
+                payload = typeof(payload) == 'string' ? payload : '';
+
+            };
+
+            // Return the response-parts that are common to all content-Types
             res.writeHead(statusCode);
             res.end(payloadString);
 
@@ -109,10 +124,20 @@ server.unifiedServer = function(req, res){
 
 // Define a request router
 server.router = {
+    '' : handlers.index,
+    'account/create' : handlers.accountCreate,
+    'account/edit' : handlers.accountEdit,
+    'account/deleted' : handlers.accountDeleted,
+    'session/create' : handlers.sessionCreate,
+    'session/deleted' : handlers.sessionDeleted,
+    'checks/all' : handlers.checksList,
+    'checks/create' : handlers.checksCreate,
+    'checks/edit' : handlers.checksEdit,
+    'checks/deleted' : handlers.checksDeleted,
     'ping'  : handlers.ping,
-    'users' : handlers.users,
-    'tokens': handlers.tokens,
-    'checks': handlers.checks
+    'api/users' : handlers.users,
+    'api/tokens': handlers.tokens,
+    'api/checks': handlers.checks
 };
 
 // Init script
