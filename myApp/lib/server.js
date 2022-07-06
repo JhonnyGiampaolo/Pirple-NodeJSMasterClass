@@ -69,6 +69,9 @@ server.unifiedServer = function(req, res){
         // Choose the handler this request should go to. If one is not found use the notFound handler
             var choosenHandler = typeof(server.router[trimmedPath]) !== 'undefined' ? server.router[trimmedPath] : handlers.notFound;
 
+        // If the request is within the public directory, use the public handlers instead
+        choosenHandler = trimmedPath.indexOf('public/') > -1 ? handlers.public : choosenHandler;
+
         // Construct the data object to send to the handler
         var data = {
             'trimmedPath' : trimmedPath,
@@ -101,7 +104,37 @@ server.unifiedServer = function(req, res){
                 res.setHeader('Content_Type','text/html')
 
                 // Use the payload called back by the handler, or default to an empty string
-                payload = typeof(payload) == 'string' ? payload : '';
+                payloadString = typeof(payload) == 'string' ? payload : '';
+
+            } if (contentType == 'favicon') {
+                res.setHeader('Content_Type','image/x-icon')
+
+                // Use the payload called back by the handler, or default to an empty string
+                payloadString = typeof(payload) !== 'undefined' ? payload : '';
+
+            } if (contentType == 'css') {
+                res.setHeader('Content_Type','text/css')
+
+                // Use the payload called back by the handler, or default to an empty string
+                payloadString = typeof(payload) !== 'undefined' ? payload : '';
+
+            } if (contentType == 'png') {
+                res.setHeader('Content_Type','image/png')
+
+                // Use the payload called back by the handler, or default to an empty string
+                payloadString = typeof(payload) !== 'undefined' ? payload : '';
+
+            } if (contentType == 'jpg') {
+                res.setHeader('Content_Type','image/jpg')
+
+                // Use the payload called back by the handler, or default to an empty string
+                payloadString = typeof(payload) !== 'undefined' ? payload : '';
+
+            }  if (contentType == 'plain') {
+                res.setHeader('Content_Type','text/plain')
+
+                // Use the payload called back by the handler, or default to an empty string
+                payloadString = typeof(payload) !== 'undefined' ? payload : '';
 
             };
 
@@ -137,7 +170,9 @@ server.router = {
     'ping'  : handlers.ping,
     'api/users' : handlers.users,
     'api/tokens': handlers.tokens,
-    'api/checks': handlers.checks
+    'api/checks': handlers.checks,
+    'favicon.ico' : handlers.favicon,
+    'public' : handlers.public
 };
 
 // Init script
