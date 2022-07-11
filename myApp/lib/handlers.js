@@ -47,6 +47,266 @@ handlers.index = function(data,callback){
     }
 };
 
+// Create Account
+handlers.accountCreate = function(data,callback){
+    // Reject any request that isn't a GET
+    if (data.method == 'get'){
+
+        // Prepare data for interpolation
+        var templateData = {
+            'head.tittle': 'Create an account',
+            'head.description' : 'Signup is easy and only takes a few seconds.',
+            'body.class' : 'accountCreate'
+        };
+
+        // Read in a template as a string
+        helpers.getTemplate('accountCreate',templateData,function(err,str){
+            if (!err && str){
+                // Add the universal header and footer
+                helpers.addUnversalTemplates(str,templateData,function(err,str){
+                    if(!err && str){
+                        // Return that page as HTML
+                        callback(200,str,'html');
+                    } else {
+                        callback(500,undefine,'html')
+                    }
+                });
+            } else {
+                callback(500,undefined,'html');
+            }
+        });
+    } else {
+        callback(405,undefined,'html');
+    }
+};
+
+// Create New Session
+handlers.sessionCreate = function(data,callback){
+    // Reject any request that isn't a GET
+    if (data.method == 'get'){
+
+        // Prepare data for interpolation
+        var templateData = {
+            'head.tittle': 'Login to your Account',
+            'head.description' : 'Please enter your phone number and a password to access your account',
+            'body.class' : 'sessionCreate'
+        };
+
+        // Read in a template as a string
+        helpers.getTemplate('sessionCreate',templateData,function(err,str){
+            if (!err && str){
+                // Add the universal header and footer
+                helpers.addUnversalTemplates(str,templateData,function(err,str){
+                    if(!err && str){
+                        // Return that page as HTML
+                        callback(200,str,'html');
+                    } else {
+                        callback(500,undefine,'html')
+                    }
+                });
+            } else {
+                callback(500,undefined,'html');
+            }
+        });
+    } else {
+        callback(405,undefined,'html');
+    }
+};
+
+// Session has been deleted
+handlers.sessionDeleted = function(data,callback){
+    // Reject any request that isn't a GET
+    if (data.method == 'get'){
+
+        // Prepare data for interpolation
+        var templateData = {
+            'head.tittle': 'Logged Out',
+            'head.description' : 'You has been logged out of your account',
+            'body.class' : 'sessionDeleted'
+        };
+
+        // Read in a template as a string
+        helpers.getTemplate('sessionDeleted',templateData,function(err,str){
+            if (!err && str){
+                // Add the universal header and footer
+                helpers.addUnversalTemplates(str,templateData,function(err,str){
+                    if(!err && str){
+                        // Return that page as HTML
+                        callback(200,str,'html');
+                    } else {
+                        callback(500,undefine,'html')
+                    }
+                });
+            } else {
+                callback(500,undefined,'html');
+            }
+        });
+    } else {
+        callback(405,undefined,'html');
+    }
+};
+
+// Edit your Account
+handlers.accountEdit = function(data,callback){
+    // Reject any request that isn't a GET
+    if (data.method == 'get'){
+
+        // Prepare data for interpolation
+        var templateData = {
+            'head.tittle': 'Account settings',
+            'body.class' : 'accountEdit'
+        };
+
+        // Read in a template as a string
+        helpers.getTemplate('accountEdit',templateData,function(err,str){
+            if (!err && str){
+                // Add the universal header and footer
+                helpers.addUnversalTemplates(str,templateData,function(err,str){
+                    if(!err && str){
+                        // Return that page as HTML
+                        callback(200,str,'html');
+                    } else {
+                        callback(500,undefine,'html')
+                    }
+                });
+            } else {
+                callback(500,undefined,'html');
+            }
+        });
+    } else {
+        callback(405,undefined,'html');
+    }
+};
+
+// Account has been deleted
+handlers.accountDeleted = function(data,callback){
+    // Reject any request that isn't a GET
+    if (data.method == 'get'){
+
+        // Prepare data for interpolation
+        var templateData = {
+            'head.tittle': 'Account deleted',
+            'head.description':'Your account has been deleted',
+            'body.class' : 'accountDeleted'
+        };
+
+        // Read in a template as a string
+        helpers.getTemplate('accountDeleted',templateData,function(err,str){
+            if (!err && str){
+                // Add the universal header and footer
+                helpers.addUnversalTemplates(str,templateData,function(err,str){
+                    if(!err && str){
+                        // Return that page as HTML
+                        callback(200,str,'html');
+                    } else {
+                        callback(500,undefine,'html')
+                    }
+                });
+            } else {
+                callback(500,undefined,'html');
+            }
+        });
+    } else {
+        callback(405,undefined,'html');
+    }
+};
+
+// Create a new check
+handlers.checksCreate = function(data,callback){
+    // Reject any request that isn't a GET
+    if (data.method == 'get'){
+
+        // Prepare data for interpolation
+        var templateData = {
+            'head.tittle': 'Create a new check',
+            'body.class' : 'checksCreate'
+        };
+
+        // Read in a template as a string
+        helpers.getTemplate('checksCreate',templateData,function(err,str){
+            if (!err && str){
+                // Add the universal header and footer
+                helpers.addUnversalTemplates(str,templateData,function(err,str){
+                    if(!err && str){
+                        // Return that page as HTML
+                        callback(200,str,'html');
+                    } else {
+                        callback(500,undefine,'html')
+                    }
+                });
+            } else {
+                callback(500,undefined,'html');
+            }
+        });
+    } else {
+        callback(405,undefined,'html');
+    }
+};
+
+// Dashboard (view all checks)
+handlers.checksList = function(data,callback){
+    // Reject any request that isn't a GET
+    if (data.method == 'get'){
+
+        // Prepare data for interpolation
+        var templateData = {
+            'head.tittle': 'Dashboard',
+            'body.class' : 'checksList'
+        };
+
+        // Read in a template as a string
+        helpers.getTemplate('checksList',templateData,function(err,str){
+            if (!err && str){
+                // Add the universal header and footer
+                helpers.addUnversalTemplates(str,templateData,function(err,str){
+                    if(!err && str){
+                        // Return that page as HTML
+                        callback(200,str,'html');
+                    } else {
+                        callback(500,undefine,'html')
+                    }
+                });
+            } else {
+                callback(500,undefined,'html');
+            }
+        });
+    } else {
+        callback(405,undefined,'html');
+    }
+};
+
+// Edit a check
+handlers.checksEdit = function(data,callback){
+    // Reject any request that isn't a GET
+    if (data.method == 'get'){
+
+        // Prepare data for interpolation
+        var templateData = {
+            'head.tittle': 'Check Details',
+            'body.class' : 'checksEdit'
+        };
+
+        // Read in a template as a string
+        helpers.getTemplate('checksEdit',templateData,function(err,str){
+            if (!err && str){
+                // Add the universal header and footer
+                helpers.addUnversalTemplates(str,templateData,function(err,str){
+                    if(!err && str){
+                        // Return that page as HTML
+                        callback(200,str,'html');
+                    } else {
+                        callback(500,undefine,'html')
+                    }
+                });
+            } else {
+                callback(500,undefined,'html');
+            }
+        });
+    } else {
+        callback(405,undefined,'html');
+    }
+};
+
 handlers.favicon = function(data,callback){
     // Reject any request that isn't a GET
     if(data.method == 'get'){
@@ -490,7 +750,7 @@ handlers.checks = function(data, callback){
 handlers._checks = {}
 
 // Checks - post
-// Required data: protocol, url, method, sucessCodes, timeout
+// Required data: protocol, url, method, sucessCodes, timeoutSeconds
 // Optional data: none
 handlers._checks.post = function(data, callback){
     // Validate inputs
@@ -498,9 +758,9 @@ handlers._checks.post = function(data, callback){
     var url = typeof(data.payload.url) == 'string' && data.payload.url.trim().length > 0 ? data.payload.url.trim() : false;
     var method = typeof(data.payload.method) == 'string' && ['post','get','put','delete'].indexOf(data.payload.method) > -1 ? data.payload.method : false;
     var successCodes = typeof(data.payload.successCodes) == 'object' && data.payload.successCodes instanceof Array && data.payload.successCodes.length > 0 ? data.payload.successCodes : false; 
-    var timeout = typeof(data.payload.timeout) == 'number' && data.payload.timeout % 1 === 0 && data.payload.timeout >= 1 && data.payload.timeout <= 5 ? data.payload.timeout : false;
+    var timeoutSeconds = typeof(data.payload.timeoutSeconds) == 'number' && data.payload.timeoutSeconds % 1 === 0 && data.payload.timeoutSeconds >= 1 && data.payload.timeoutSeconds <= 5 ? data.payload.timeoutSeconds : false;
 
-    if (protocol && url && method && successCodes && timeout){
+    if (protocol && url && method && successCodes && timeoutSeconds){
         // Get the token from the header
         var token = typeof(data.headers.token) == 'string' ? data.headers.token : false;
         
@@ -526,7 +786,7 @@ handlers._checks.post = function(data, callback){
                                 'url' : url,
                                 'method' : method,
                                 'successCodes' : successCodes,
-                                'timeout' : timeout
+                                'timeoutSeconds' : timeoutSeconds
                             };
 
                             // Save the object
@@ -599,7 +859,7 @@ handlers._checks.get = function(data, callback){
 
 // Checks - put
 // Required data: id
-// Optional data: protocol, url, method, successCodes, timeout (one must be sent)
+// Optional data: protocol, url, method, successCodes, timeoutSeconds (one must be sent)
 handlers._checks.put = function(data, callback){
     // Check for the required field
     const id = typeof(data.payload.id) == 'string' && data.payload.id.trim().length == 20 ? data.payload.id.trim() : false;
@@ -609,12 +869,12 @@ handlers._checks.put = function(data, callback){
     var url = typeof(data.payload.url) == 'string' && data.payload.url.trim().length > 0 ? data.payload.url.trim() : false;
     var method = typeof(data.payload.method) == 'string' && ['post','get','put','delete'].indexOf(data.payload.method) > -1 ? data.payload.method : false;
     var successCodes = typeof(data.payload.successCodes) == 'object' && data.payload.successCodes instanceof Array && data.payload.successCodes.length > 0 ? data.payload.successCodes : false; 
-    var timeout = typeof(data.payload.timeout) == 'number' && data.payload.timeout % 1 === 0 && data.payload.timeout >= 1 && data.payload.timeout <= 5 ? data.payload.timeout : false;
+    var timeoutSeconds = typeof(data.payload.timeoutSeconds) == 'number' && data.payload.timeoutSeconds % 1 === 0 && data.payload.timeoutSeconds >= 1 && data.payload.timeoutSeconds <= 5 ? data.payload.timeoutSeconds : false;
 
     // Error if the id is invalid
     if(id){
         // Error if nothing is sent to update
-        if (protocol || url || method || successCodes || timeout){
+        if (protocol || url || method || successCodes || timeoutSeconds){
             // Lookup the check
             _data.read('checks',id,function(err,checkData){
                 if(!err && checkData){
@@ -636,8 +896,8 @@ handlers._checks.put = function(data, callback){
                             if(successCodes){
                                 checkData.successCodes = successCodes;
                             }
-                            if(timeout){
-                                checkData.timeout = timeout;
+                            if(timeoutSeconds){
+                                checkData.timeoutSeconds = timeoutSeconds;
                             }
                             // Store the new updates 
                             _data.update('checks',id,checkData,function(err){

@@ -53,7 +53,7 @@ workers.validateCheckData = function(originalCheckData){
   originalCheckData.url = typeof(originalCheckData.url) == 'string' && originalCheckData.url.trim().length > 0 ? originalCheckData.url.trim() : false;
   originalCheckData.method = typeof(originalCheckData.method) == 'string' &&  ['post','get','put','delete'].indexOf(originalCheckData.method) > -1 ? originalCheckData.method : false;
   originalCheckData.successCodes = typeof(originalCheckData.successCodes) == 'object' && originalCheckData.successCodes instanceof Array && originalCheckData.successCodes.length > 0 ? originalCheckData.successCodes : false;
-  originalCheckData.timeout = typeof(originalCheckData.timeout) == 'number' && originalCheckData.timeout % 1 === 0 && originalCheckData.timeout >= 1 && originalCheckData.timeout <= 5 ? originalCheckData.timeout : false;
+  originalCheckData.timeoutSeconds = typeof(originalCheckData.timeoutSeconds) == 'number' && originalCheckData.timeoutSeconds % 1 === 0 && originalCheckData.timeoutSeconds >= 1 && originalCheckData.timeoutSeconds <= 5 ? originalCheckData.timeoutSeconds : false;
   // Set the keys that may not be set (if the workers have never seen this check before)
   originalCheckData.state = typeof(originalCheckData.state) == 'string' && ['up','down'].indexOf(originalCheckData.state) > -1 ? originalCheckData.state : 'down';
   originalCheckData.lastChecked = typeof(originalCheckData.lastChecked) == 'number' && originalCheckData.lastChecked > 0 ? originalCheckData.lastChecked : false;
@@ -65,7 +65,7 @@ workers.validateCheckData = function(originalCheckData){
   originalCheckData.url &&
   originalCheckData.method &&
   originalCheckData.successCodes &&
-  originalCheckData.timeout){
+  originalCheckData.timeoutSeconds){
     workers.performCheck(originalCheckData);
   } else {
     // If checks fail, log the error and fail silently
@@ -96,7 +96,7 @@ workers.performCheck = function(originalCheckData){
     'hostname' : hostName,
     'method' : originalCheckData.method.toUpperCase(),
     'path' : path,
-    'timeout' : originalCheckData.timeout * 1000
+    'timeoutSeconds' : originalCheckData.timeoutSeconds * 1000
   };
 
   // Instantiate the request object (using either the http or https module)
@@ -126,10 +126,10 @@ workers.performCheck = function(originalCheckData){
     }
   });
 
-  // Bind to the timeout event
-  req.on('timeout',function(){
+  // Bind to the timeoutSeconds event
+  req.on('timeoutSeconds',function(){
     // Update the checkOutcome and pass the data along
-    checkOutcome.error = {'error' : true, 'value' : 'timeout'};
+    checkOutcome.error = {'error' : true, 'value' : 'timeoutSeconds'};
 						 
 					   
 		  
