@@ -14,6 +14,95 @@ var e = new _events();
 // Instantiate the CLI module object
 var cli = {};
 
+// Input handlres
+e.on('man',function(str){
+    cli.responders.help();
+});
+
+e.on('help',function(str){
+    cli.responders.help();
+});
+
+e.on('exit',function(str){
+    cli.responders.exit();
+});
+
+e.on('stats',function(str){
+    cli.responders.stats();
+});
+
+e.on('list users',function(str){
+    cli.responders.listUsers();
+});
+
+e.on('more user info',function(str){
+    cli.responders.moreUserInfo(str);
+});
+
+e.on('list checks',function(str){
+    cli.responders.listChecks(str);
+});
+
+e.on('more check info',function(str){
+    cli.responders.moreCheckInfo(str);
+});
+
+e.on('list logs',function(str){
+    cli.responders.listLogs();
+});
+
+e.on('more log info',function(str){
+    cli.responders.moreLogInfo(str);
+});
+
+// Responders
+cli.responders = {};
+
+// Help
+cli.responders.help = function(){
+    console.log("You ask for help");
+}
+
+// Exit
+cli.responders.exit = function(){
+    console.log("You ask for exit");
+};
+
+// Stats
+cli.responders.stats = function(){
+    console.log("You ask for stats");
+};
+
+// List of users
+cli.responders.listUsers = function(){
+    console.log("You ask to list users");
+};
+
+// More user info
+cli.responders.moreUserInfo = function(str){
+    console.log("You ask for more user info", str);
+};
+
+// List of Checks
+cli.responders.listChecks = function(str){
+    console.log("You ask to list checks",str);
+};
+
+// More check info
+cli.responders.moreCheckInfo = function(str){
+    console.log("You ask for more checks info",str);
+};
+
+// List logs
+cli.responders.listLogs = function(){
+    console.log("You ask to list logs");
+};
+
+// More log info
+cli.responders.moreLogInfo = function(str){
+    console.log("You ask for more log info",str);
+};
+
 // Input processor
 cli.processInput = function(str){
     str = typeof(str) == 'string' && str.trim().length > 0 ? str.trim() : false;
@@ -28,7 +117,7 @@ cli.processInput = function(str){
             'list users',
             'more user info',
             'list checks',
-            'more checks info',
+            'more check info',
             'list logs',
             'more log info'
         ];
