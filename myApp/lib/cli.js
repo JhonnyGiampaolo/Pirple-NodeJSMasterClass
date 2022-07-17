@@ -13,6 +13,8 @@ var e = new _events();
 var os = require('os');
 var v8 = require('v8');
 var _data = require("./data");
+var _logs = require("./logs");
+var helpers = require("./helpers");
 
 // Instantiate the CLI module object
 var cli = {};
@@ -72,7 +74,7 @@ cli.responders.help = function(){
         'more user info --{userId}':'Show details of a specific user',
         'list checks --up --down':'Show a list of all the active checks in the system, including their states. The "--up" and the "--down" flags are both optional',
         'more check info --{checkId}':'Show details of a specific check',
-        'list logs':'Show a list of all the log files available to be read (compress and uncompressed)',
+        'list logs':'Show a list of all the log files available to be read compress only',
         'more log info --{filaName}':'Show details of a specified log file',
     };
 
@@ -210,27 +212,106 @@ cli.responders.listUsers = function(){
 
 // More user info
 cli.responders.moreUserInfo = function(str){
-    console.log("You ask for more user info", str);
+    // Get hte ID from the string
+    var arr = str.split('--');
+    var userId = typeof(arr[1]) == 'string' && arr[1].trim().length > 0 ? arr[1].trim() : false;
+    if(userId){
+        // Lookup the user
+        _data.read('users',userId,function(err,userData){
+            if(!err && userData){
+                // Remove the hashed password
+                delete userData.hashedPassword;
+                
+                // Print the JSON with the text highlighting
+                cli.verticalSpace();
+                console.dir(userData,{'colors':true});
+                cli.verticalSpace();
+            }
+        });
+    }
 };
 
 // List of Checks
 cli.responders.listChecks = function(str){
-    console.log("You ask to list checks",str);
+    _data.list('checks',function(err,checksIds){
+        if(!err && checksIds && checksIds.length > 0){
+            cli.verticalSpace();
+            checksIds.forEach(function(checkId){
+                _data.read('checks',checkId,function(err,checkData){
+                    var includeCheck = false;
+                    var lowerString = str.toLowerCase();
+
+                    // Get the state, default to down
+                    var state = typeof(checkData.state) == 'string' ? checkData.state : 'down';
+                    // Get the state, default to unknown
+                    var stateOrUnknown = typeof(checkData.state) == 'string' ? checkData.state : 'unknown';
+                    // If the user has specified the state, or hasn't specified any state, include the current check accordingly
+                    if(lowerString.indexOf('--'+state)>-1 || (lowerString.indexOf('--down') == -1 && lowerString.indexOf('--up') == -1)){
+                        var line = 'ID: '+checkData.id+' '+checkData.method.toUpperCase()+' '+checkData.protocol+'://'+checkData.url+' State: '+stateOrUnknown;
+                        console.log(line);
+                        cli.verticalSpace();
+                    }
+                });
+            });
+        }
+    });
 };
 
 // More check info
 cli.responders.moreCheckInfo = function(str){
-    console.log("You ask for more checks info",str);
+    // Get hte ID from the string
+    var arr = str.split('--');
+    var checkId = typeof(arr[1]) == 'string' && arr[1].trim().length > 0 ? arr[1].trim() : false;
+    if(checkId){
+        // Lookup the check
+        _data.read('checks',checkId,function(err,checkData){
+            if(!err && checkData){
+                // Print the JSON with the text highlighting
+                cli.verticalSpace();
+                console.dir(checkData,{'colors':true});
+                cli.verticalSpace();
+            }
+        });
+    }
 };
 
 // List logs
 cli.responders.listLogs = function(){
-    console.log("You ask to list logs");
+    _logs.list(true, function(err,logFileNames){
+        if(!err && logFileNames && logFileNames.length > 0){
+            cli.verticalSpace();
+            logFileNames.forEach(function(logFileName){
+                if(logFileName.indexOf('-') > -1){
+                    console.log(logFileName);
+                    cli.verticalSpace();
+                }
+            });
+        }
+    });
 };
 
 // More log info
 cli.responders.moreLogInfo = function(str){
-    console.log("You ask for more log info",str);
+    // Get the logFileName from the string
+    var arr = str.split('--');
+    var logFileName = typeof(arr[1]) == 'string' && arr[1].trim().length > 0 ? arr[1].trim() : false;
+    if(logFileName){
+        cli.verticalSpace();
+        // Decompress the log
+        _logs.decompress(logFileName,function(err,strData){
+            if(!err && strData){
+                // Split into lines
+                var arr = strData.split('\n');
+                arr.forEach(function(jsonString){
+                    var logObject = helpers.parseJsonToObject(jsonString);
+                    if(logObject && JSON.stringify(logObject) !== '{}'){
+                        console.dir(logObject,{'colors':true});
+                        cli.verticalSpace();
+                    }
+                });
+            }
+        });
+    }
 };
 
 // Input processor
