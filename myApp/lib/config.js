@@ -27,6 +27,26 @@ environments.staging = {
     } 
 };
 
+// Testing environment
+environments.testing = {
+    'httpPort'  : 4000,
+    'httpsPort' : 4001,
+    'envName' : 'testing',
+    'hashingSecret' : 'thisIsAScret',
+    'maxChecks' : 5,
+    'twilio' : {
+        'accountSid' :'ACa722b54e30f315c671d00cc9ed403f1b',
+        'authToken' : '9ab1aea9620e14ca8a0f173610a3e5bb',
+        'fromPhone' : '+16013916737'
+    },
+    'templateGlobals': {
+        'appName' : 'UptimeChecker',
+        'companyName' : 'NotARealCompany, Inc',
+        'yearCreated' : '2022',
+        'baseUrl' : 'http://localhost:4000/'
+    } 
+};
+
 // Production environment
 environments.production = {
     'httpPort'  : 5000,

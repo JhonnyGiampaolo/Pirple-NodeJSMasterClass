@@ -7,12 +7,19 @@
 var crypto = require('crypto');
 var config  = require('./config');
 var https = require('https');
+var http = require('http');
 var querystring = require('querystring');
 var path = require('path');
 var fs = require('fs');
+var config = require('./../lib/config');
 
 // Containers for helpers
 var helpers = {};
+
+// Sample for testing that simply returns a number
+helpers.getANumber = function(){
+    return 1;
+};
 
 // Create a SHA256 hash
 helpers.hash = function(str){
@@ -193,6 +200,27 @@ helpers.getStaticAsset = function(fileName,callback){
     } else {
         callback('A valid filename was not speficied');
     }
+};
+
+// Send request to the testing environment (it MUST BE ONLY consumed for the API Tests)
+helpers.makeGetRequest = function(path,callback){
+    // Configure the request details
+    var requestDetails = {
+        'protocol' : 'http:',
+        'hostname' : 'localhost',
+        'port' : config.httpPort,
+        'method' : 'GET',
+        'path' : path,
+        'headers' : {
+            'Content-Type' : 'application/json'
+        }
+    };
+
+    // Send the request
+    var req = http.request(requestDetails,function(res){
+        callback(res);
+    });
+    req.end();
 };
 
 // Export the module
