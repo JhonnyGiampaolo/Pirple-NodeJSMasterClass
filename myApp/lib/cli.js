@@ -15,6 +15,7 @@ var v8 = require('v8');
 var _data = require("./data");
 var _logs = require("./logs");
 var helpers = require("./helpers");
+var childProcess = require('child_process');
 
 // Instantiate the CLI module object
 var cli = {};
@@ -277,6 +278,7 @@ cli.responders.moreCheckInfo = function(str){
 
 // List logs
 cli.responders.listLogs = function(){
+    
     _logs.list(true, function(err,logFileNames){
         if(!err && logFileNames && logFileNames.length > 0){
             cli.verticalSpace();
@@ -287,8 +289,25 @@ cli.responders.listLogs = function(){
                 }
             });
         }
+    }); /*
+
+    Using child process. It doesn't work :(
+
+    var ls = childProcess.spawn('cmd.exe',['dir','./.logs']);
+    ls.stdout.on('data',function(dataObject){
+        // Explode into separate lines
+        var dataStr = dataObject.toString();
+        var logFileNames = dataStr.split('\n');
+        cli.verticalSpace();
+        logFileNames.forEach(function(logFileName){
+            if(typeof(logFileName) == 'string' && logFileName.length > 0 && logFileName.indexOf('-') > -1){
+                console.log(logFileName);
+                cli.verticalSpace();
+            }
+        });
     });
-};
+    */
+}
 
 // More log info
 cli.responders.moreLogInfo = function(str){
